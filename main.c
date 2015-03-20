@@ -5,8 +5,9 @@
 #include<math.h>
 
 #define Z 13
-#define M 27
+#define A 27
 #define Ed 25.0
+#define density 2.70
 
 double v(double E);
 double Sn(double E);
@@ -19,14 +20,18 @@ int main(void)
 	double high = 200;
 	int gp = 1000;
 	int gp_plot = 10;
-	double delta = (high - Ed) / gp_plot;
+	double delta = (high - 2.0 * Ed) / gp_plot;
+
+	double NA = 6.022e23;
+	double N = density * NA / 27.0;
 
 	// Plot variable high value from Ed to high
 	for( int i = 0; i < gp_plot; i++ )
 	{
-		double E = Ed + i*delta;
-		double integral = integr8or(v, Ed, E, gp);
-		printf("%e\t%e\n", E, integral);
+		double E = 2.0*Ed + i*delta;
+		double integral = integr8or(v, 2.0*Ed, E, gp);
+		double val = 2.0 / E * (N * integral);
+		printf("%.2lf\t%e\n", E, val);
 	}
 	
 	return 0;
@@ -39,8 +44,8 @@ double v(double E)
 
 double Sn(double E)
 {
-	double numerator = 8.462e-15 * Z*Z * M * Sigma_n(E);
-	double denominator = 4 * M * pow(Z,0.23);
+	double numerator = 8.462e-15 * Z*Z * Sigma_n(E);
+	double denominator = 4 * pow(Z,0.23);
 
 	return numerator/denominator;
 }
@@ -56,8 +61,8 @@ double Sigma_n(double E)
 
 double Epsilon(double E)
 {
-	double numerator = 32.53 * M * E;
-	double denominator = 4 * Z*Z * M * pow(Z,0.23);
+	double numerator = 32.53 * E;
+	double denominator = 4 * Z*Z * pow(Z,0.23);
 	
 	return numerator/denominator;
 }

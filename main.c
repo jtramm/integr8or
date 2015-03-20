@@ -1,10 +1,12 @@
 // A test main function
 
+#include "integr8or_header.h"
 #include<stdio.h>
 #include<math.h>
 
-#define Z 6
-#define M 56
+#define Z 13
+#define M 27
+#define Ed 25.0
 
 double v(double E);
 double Sn(double E);
@@ -14,6 +16,19 @@ double Se(double E);
 
 int main(void)
 {
+	double high = 200;
+	int gp = 1000;
+	int gp_plot = 10;
+	double delta = (high - Ed) / gp_plot;
+
+	// Plot variable high value from Ed to high
+	for( int i = 0; i < gp_plot; i++ )
+	{
+		double E = Ed + i*delta;
+		double integral = integr8or(v, Ed, E, gp);
+		printf("%e\t%e\n", E, integral);
+	}
+	
 	return 0;
 }
 

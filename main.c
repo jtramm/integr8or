@@ -13,10 +13,11 @@ double Sn(double E);
 double Sigma_n(double E);
 double Epsilon(double E);
 double Se(double E);
+double K_P( double E );
 
 int main(void)
 {
-	int gp = 1000;
+	int gp = 10000;
 	int gp_plot = 10;
 	
 	// Energy Grid
@@ -32,13 +33,25 @@ int main(void)
 	{
 		double integral = integr8or(v, 0.0001, E[i], gp);
 		double val = integral / (2.0*Ed);
-		printf("%.2lf\t%e\n", E[i], val);
+		printf("%e\t%e\t%e\n", E[i], val, K_P(E[i]));
 	}
-	double integral = integr8or(v, 0.0001, 50, gp);
-	//double val = integral / (2.0*Ed);
+	double integral = integr8or(v, 0.0001, 60, gp);
+	integral = integral / (2.0*Ed);
 	printf("%e\n", integral);
 
 	return 0;
+}
+
+double K_P( double E )
+{
+	if( E < Ed )
+		return 0;
+	else if( E >= Ed && E <= 2.0 * Ed )
+		return 1.0;
+	else if( E > 2.0 * Ed )
+		return E / (2.0 * Ed) - 2.0 * Ed + 1;
+	else
+		return 6400.0;
 }
 
 double v(double E)

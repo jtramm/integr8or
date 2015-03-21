@@ -37,7 +37,7 @@ $(program): $(obj) integr8or_header.h
 clean:
 	rm -rf $(program) $(obj) data.dat
 run:
-	./$(program)
+	./$(program) > data.dat
 graph:
 	gnuplot graph.gp
 edit:

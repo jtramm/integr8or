@@ -18,7 +18,7 @@ double K_P( double E );
 int main(void)
 {
 	int gp = 10000;
-	int gp_plot = 10;
+	int gp_plot = 1000;
 	
 	// Energy Grid
 	double * E = (double *) malloc( gp_plot * sizeof(double));
@@ -49,7 +49,7 @@ double K_P( double E )
 	else if( E >= Ed && E <= 2.0 * Ed )
 		return 1.0;
 	else if( E > 2.0 * Ed )
-		return E / (2.0 * Ed) - 2.0 * Ed + 1;
+		return E / (2.0 * Ed);
 	else
 		return 6400.0;
 }

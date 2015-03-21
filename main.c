@@ -7,6 +7,7 @@
 
 #define Z 13
 #define Ed 25.0
+#define M 27
 
 double v(double E);
 double Sn(double E);
@@ -31,8 +32,14 @@ int main(void)
 	// Plot variable high value from Ed to high
 	for( int i = 0; i < gp_plot; i++ )
 	{
-		double integral = integr8or(v, 0.0001, E[i], gp);
-		double val = integral / (2.0*Ed);
+		double val;
+		if( E[i] <= 2.0 * Ed )
+			 val = K_P(E[i]);	
+		else
+		{
+			double integral = integr8or(v, 0.0001, E[i], gp);
+			val = integral / (2.0*Ed);
+		}
 		printf("%e\t%e\t%e\n", E[i], val, K_P(E[i]));
 	}
 	double integral = integr8or(v, 0.0001, 60, gp);
@@ -44,14 +51,17 @@ int main(void)
 
 double K_P( double E )
 {
+	double me = 5.4857990946e-4;
+	double I = 5.98577;
+	double Ec = M * I / (4 * me);
 	if( E < Ed )
 		return 0;
 	else if( E >= Ed && E <= 2.0 * Ed )
 		return 1.0;
-	else if( E > 2.0 * Ed )
+	else if( E > 2.0 * Ed && E <= Ec )
 		return E / (2.0 * Ed);
 	else
-		return 6400.0;
+		return Ec / (2.0*Ed);
 }
 
 double v(double E)

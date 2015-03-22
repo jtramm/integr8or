@@ -7,7 +7,6 @@
 
 #define Z 13
 #define Ed 25.0
-#define M 27
 
 double v(double E);
 double Sn(double E);
@@ -18,14 +17,16 @@ double K_P( double E );
 
 int main(void)
 {
-	int gp = 10000;
-	int gp_plot = 1000;
+	int gp = 1000;
+	int gp_plot = 10000;
+	double f = 0.90;
 	
 	// Energy Grid
 	double * E = (double *) malloc( gp_plot * sizeof(double));
+	double * Vt = (double *) malloc( gp_plot * sizeof(double));
 	for( int i = 0; i < gp_plot; i++ )
 	{
-		double delta = 7.0 / gp_plot;
+		double delta = 8.0 / gp_plot;
 		E[i] = pow(10.0, delta*i);
 	}
 
@@ -40,19 +41,43 @@ int main(void)
 			double integral = integr8or(v, 0.0001, E[i], gp);
 			val = integral / (2.0*Ed);
 		}
-		printf("%e\t%e\t%e\n", E[i], val, K_P(E[i]));
+		Vt[i] = val;
+		//printf("%e\t%e\t%e\n", E[i], val, K_P(E[i]));
 	}
-	double integral = integr8or(v, 0.0001, 60, gp);
-	integral = integral / (2.0*Ed);
-	printf("%e\n", integral);
+	
+	double max = Vt[gp_plot-1];
+	double cutoff = max * f;
+	printf("V max = %lf\n", max);
+	printf("cutoff = %lf\n", cutoff);
+
+	for( int i = 0; i < gp_plot-1; i++ )
+	{
+		if( Vt[i] >= cutoff)
+		{
+			printf("Ed = %e\n", E[i]);
+			printf("V(Ed) = %lf\n", Vt[i]);
+			printf("idx = %d out of %d\n", i, gp_plot);
+			break;
+		}
+	}
+
 
 	return 0;
 }
 
+
 double K_P( double E )
 {
+	// Al
 	double me = 5.4857990946e-4;
-	double I = 5.98577;
+	double M =  26.981539;
+	double I =  5.98577;
+	/*
+	// Pb
+	double me = 5.4857990946e-4;
+	double M =  208;
+	double I =  7.41666;
+	*/
 	double Ec = M * I / (4 * me);
 	if( E < Ed )
 		return 0;
